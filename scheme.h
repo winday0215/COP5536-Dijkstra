@@ -2,14 +2,14 @@
 #include "graph.h"
 #include "fheap.h"
 
-class scheme{
+class Scheme{
   public:
-    int d[5000];
+    long d[5000];
     bool s[5000];
     bool f[5000];
 
-    scheme(Graph *g);
-    ~scheme();
+    Scheme(Graph *g);
+    ~Scheme();
 
     void fheapscheme(int v);
     void simplescheme(int v);

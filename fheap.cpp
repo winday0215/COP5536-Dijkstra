@@ -5,7 +5,6 @@ using namespace std;
 Fheap::Fheap(int n){
   maxnodes = n;
   maxtrees = 1+(int)(1.44*log(n)/log(2.0));
-
   for(int i=0; i<maxnodes; i++){
     nodes[i] = NULL;
   }
@@ -27,38 +26,37 @@ int Fheap::deletemin(){
     t = t>>1;
     r++;
   }
-
+ 
   Fheapnode *minptr;
   minptr = trees[r];
   int k = minptr->key;
 
+
   //find minimum
   while(r>0){
     r--;
-    Fheapnode *next;
-    next = trees[r];
-    if(next != NULL){
-      if(next->key < k){
-        k = next->key;
-        minptr = next;
+    if(trees[r] != NULL){
+      if(trees[r]->key < k){
+        k = trees[r]->key;
+        minptr = trees[r];
       }
     }
   }
-
   //delete minimum
   trees[minptr->rank] = NULL;
   treetable -= (1 << minptr->rank);
 
   //meld minimum's child
-  if(minptr->child != NULL){
-    meld(minptr->child);
+  Fheapnode *child;
+  child = minptr->child;
+  if(child != NULL){
+    meld(child);
   }
-
   int v = minptr->vindex;
   nodes[v] = NULL;
+
   delete minptr;
   itemcount--;
-
   return v;
 }
 
@@ -151,15 +149,18 @@ void Fheap::dcreasekey(int vindex, int newkey){
   
   //meld new root into heap
   meld(newroot);
-
+  
+  
 }
 
-void Fheap:: meld(Fheapnode *treelist){
+void Fheap:: meld(Fheapnode *nodelist){
   Fheapnode *first, *nodeptr, *next, *lc, *rc;
   Fheapnode *newnode, *temp, *temp1;
   int rank;
 
-  first = nodeptr = treelist;
+  first = nodelist;
+  nodeptr = nodelist;
+
   do {
     next = nodeptr->right;
     nodeptr->right = nodeptr;
@@ -171,12 +172,10 @@ void Fheap:: meld(Fheapnode *treelist){
     
     do{
     
-      temp = trees[rank];
-
       //if a tree with rank exist
-      if(temp != NULL){
-        treetable -= (1 << rank);
+      if((temp = trees[rank])){
         trees[rank] = NULL;
+        treetable -= (1 << rank);
         //choose the smaller one between temp and new node as newroot
         if(temp->key < newnode->key){
           temp1 = newnode;
@@ -184,16 +183,16 @@ void Fheap:: meld(Fheapnode *treelist){
           temp = temp1;
         }
         if(rank++ >0){
-          rc = newnode->right;
+          rc = newnode->child;
           lc = rc->left;
           temp->left = lc;
           temp->right = rc;
           lc->right = temp;
           rc->left = temp;
         }
-        temp->parent = newnode;
         newnode->child = temp;
         newnode->rank = rank;
+        temp->parent = newnode;
         temp->marked = 0; //not root anymore
       }
       else {
@@ -205,4 +204,8 @@ void Fheap:: meld(Fheapnode *treelist){
     
     nodeptr = next; //begin next round
   }while(nodeptr != first);
+}
+
+int Fheap::numvertices(){
+  return itemcount;
 }

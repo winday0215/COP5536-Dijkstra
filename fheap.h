@@ -24,4 +24,5 @@ class Fheap {
     void insert(int vindex, int key);
     void dcreasekey(int vindex, int newkey);
     void meld(Fheapnode *treelist);
+    int numvertices();
 };

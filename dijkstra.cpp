@@ -1,9 +1,10 @@
-#include "graph.h"
+#include "scheme.h"
 #include <string>
 #include <cstdlib>
 #include <sstream>
 #include <cmath>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 int main(int argc, char ** argv){
@@ -35,8 +36,19 @@ int main(int argc, char ** argv){
     //random generate graph, vetices=n, edges=numedge, weight=1000
     g->randomgraph(n, nedge, 1000);
     //print graph
-    g->printgraph();
+   // g->printgraph();
+    Scheme *scheme = new Scheme(g);
+    
+    //use fheap scheme
+    cout << "Fheap start" << endl; 
+    clock_t start = clock();
+    scheme->fheapscheme(startpoint);
+    clock_t duration = clock() - start;
+    cout << "Fibonacci heap scheme cost " << duration << " microseconds" << endl;
+    
+    
     //clean
+    delete scheme;
     delete g;
   }
   //read from file, operate by simple scheme

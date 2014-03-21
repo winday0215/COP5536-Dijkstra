@@ -19,6 +19,7 @@ Graph::~Graph(){
   }
 }
 
+//insert one edge into graph
 void Graph::insertedge(int source, int dest, int weight){
   Graphedge newedge1, newedge2;
   newedge1.source = source;
@@ -34,6 +35,7 @@ void Graph::insertedge(int source, int dest, int weight){
   vertexarray[dest].childsize++;
 }
 
+//check if an edge from source s to destination e exist
 bool Graph::edgeexist(int s, int e){
 
   list<Graphedge>::iterator it;
@@ -48,9 +50,9 @@ bool Graph::edgeexist(int s, int e){
   return false;
 }
 
+//use DFS to check if this graph is all connected
 bool Graph::connected(){
-  for(int i=0; i<numvertices; i++){
-    int stack[numvertices];
+    int stack[numvertices]; //stack
     bool visited[numvertices];
     int pos = 0;
     
@@ -59,12 +61,12 @@ bool Graph::connected(){
     }
 
     int vertexcount = 0;
-    visited[i] = true;
-    stack[pos++] = i;
+    visited[0] = true;//check from vertex 0
+    stack[pos++] = 0;
 
     int v, w;
     while(pos){
-      v = stack[--pos];
+      v = stack[--pos];//pop from stack
       vertexcount++;
 
       list<Graphedge>::iterator it;
@@ -74,33 +76,41 @@ bool Graph::connected(){
           w = (*it).dest;
           if(visited[w] == false){
             visited[w] = true;
-            stack[pos++] = w;
+            stack[pos++] = w; //push into stack
           }
       }
     }
+
+    //if count of reachable nodes = total number of nodes, success
     if(vertexcount != numvertices){
       return false;
     }
-  }
   return true;
 }
 
-
+//generate random graph
 void Graph::randomgraph(int nvertex, int nedge, int weight){
   int edgecount = 0;
   bool success = false;
+  int fedgecount = 0, i=1;
 
   while(!success){
     while(edgecount < nedge){
+      if(edgecount - fedgecount==100000){
+        cout <<i<< "th 100000"<< endl;
+        i++;
+        fedgecount = edgecount;
+      }
       int i = rand() % nvertex;
       int j = rand() % nvertex;
-      int w = rand() % weight;
+      int w = rand() % weight + 1;
 
       if(i != j && edgeexist(i,j) == false){
         insertedge(i,j,w);
         edgecount++;
       } 
     }
+    //check if every node of this graph can reach all other nodes
     success = connected();
   }
 }
