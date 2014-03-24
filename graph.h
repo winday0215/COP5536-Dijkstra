@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <string>
 using namespace std;
 
 /*------------------------------------------
@@ -10,7 +11,7 @@ using namespace std;
 struct Graphedge{
   int source;
   int dest;
-  int weight;
+  long weight;
 };
 
 /*-------------------
@@ -38,12 +39,14 @@ class Graph{
     int numvertices; //total vertices number
     Graphvertex vertexarray[5000];//maximum vertices number is 5000
     
+    Graph();    
     Graph(int n);
     ~Graph();
 
-    void insertedge(int source, int dest, int weight);
+    void insertedge(int source, int dest, long weight);
     bool edgeexist(int source, int dest);
     bool connected();
-    void randomgraph(int i, int j, int w);
+    void randomgraph(int i, int j, long w);
+    int graphfromfile(string filename);
     void printgraph();
 };
