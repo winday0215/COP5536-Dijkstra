@@ -11,6 +11,6 @@ class Scheme{
     Scheme(Graph *g);
     ~Scheme();
 
-    void fheapscheme(int v);
-    void simplescheme(int v);
+    void fheapscheme(int v, bool print);
+    void simplescheme(int v, bool print);
 };
